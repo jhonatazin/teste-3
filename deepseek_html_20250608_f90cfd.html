@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convite de Aniversário - Jorge Gabriel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 90%;
+      max-width: 400px;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #ffcc00;
+      margin-bottom: 1rem;
+    }
+    p, input, button {
+      font-size: 1rem;
+    }
+    form {
+      margin-top: 1.5rem;
+    }
+    input[type="text"] {
+      padding: 0.6rem;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 0.5rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.2rem;
+      font-size: 1rem;
+      background-color: #ff4444;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #ff3333;
+    }
+    .hidden {
+      display: none;
+    }
+    .pix-box {
+      margin-top: 1.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    
+    /* Estilos para o contador regressivo */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 1.5rem 0;
+    }
+    .countdown-box {
+      background: rgba(255, 204, 0, 0.2);
+      border: 1px solid #ffcc00;
+      border-radius: 8px;
+      padding: 8px 5px;
+      min-width: 60px;
+    }
+    .countdown-number {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+    .countdown-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #ccc;
+    }
+    .countdown-title {
+      margin: 0.5rem 0 0.3rem;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Convite de Aniversário 🎉</h1>
+    <p>Você está convidado para comemorar o aniversário de <strong>Jorge Gabriel</strong>!</p>
+    <p><strong>📅 28 de julho</strong><br>
+       <strong>📍 Celebre Recepções</strong></p>
+    
+    <!-- Contador Regressivo -->
+    <div class="countdown-title">Faltam:</div>
+    <div class="countdown">
+      <div class="countdown-box">
+        <div class="countdown-number" id="days">00</div>
+        <div class="countdown-label">Dias</div>
+      </div>
+      <div class="countdown-box">
+        <div class="countdown-number" id="hours">00</div>
+        <div class="countdown-label">Horas</div>
+      </div>
+      <div class="countdown-box">
+        <div class="countdown-number" id="minutes">00</div>
+        <div class="countdown-label">Min</div>
+      </div>
+      <div class="countdown-box">
+        <div class="countdown-number" id="seconds">00</div>
+        <div class="countdown-label">Seg</div>
+      </div>
+    </div>
+
+    <form id="rsvpForm">
+      <p>Confirme sua presença:</p>
+      <input type="text" id="name" placeholder="Digite seu nome" required /> <br />
+      <button type="submit">Confirmar Presença</button>
+    </form>
+
+    <div class="pix-box hidden" id="thanksBox">
+      <h2>Obrigado por confirmar! 🎁</h2>
+      <p>Se quiser presentear, o Jorge Gabriel vai adorar receber um PIX 💖</p>
+      <p><strong>Chave PIX:</strong> <span id="pixKey">jhonatagabriel166@gmail.com</span></p>
+      <button onclick="copyPix()">Copiar chave PIX</button>
+    </div>
+  </div>
+
+  <script>
+    // Contador regressivo para o aniversário
+    function updateCountdown() {
+      // Definir a data do aniversário (28 de julho)
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      
+      // Verificar se o aniversário já passou este ano
+      const birthdayThisYear = new Date(currentYear, 6, 28); // Mês 6 = julho (0-indexed)
+      const birthdayNextYear = new Date(currentYear + 1, 6, 28);
+      
+      // Escolher a próxima data de aniversário
+      const targetDate = now < birthdayThisYear ? birthdayThisYear : birthdayNextYear;
+      
+      // Calcular a diferença de tempo
+      const diff = targetDate - now;
+      
+      // Calcular dias, horas, minutos e segundos
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      // Atualizar a exibição
+      document.getElementById('days').textContent = days.toString().padStart(2, '0');
+      document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+    
+    // Atualizar o contador a cada segundo
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // Executar imediatamente
+
+    // Código existente para o formulário
+    const form = document.getElementById('rsvpForm');
+    const nameInput = document.getElementById('name');
+    const thanksBox = document.getElementById('thanksBox');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      if (!name) return alert("Por favor, digite seu nome.");
+
+      try {
+        await fetch('https://script.google.com/macros/s/AKfycbyxwS4guOrPGZi2S7J5dcS6zdnVgBESiqklU-u3lkySgftDlzkM7jaYpTtoMuPc6BEe/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+      } catch (error) {
+        console.error("Erro ao enviar ao Google Sheets:", error);
+      }
+
+      form.classList.add('hidden');
+      thanksBox.classList.remove('hidden');
+    });
+
+    function copyPix() {
+      const key = document.getElementById('pixKey').innerText;
+      navigator.clipboard.writeText(key);
+      alert('Chave PIX copiada!');
+    }
+  </script>
+</body>
+</html>
